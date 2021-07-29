@@ -2,26 +2,19 @@
 - hosts: all
   become: true
   tasks:
-    - name: install apache2
-      apt:
-        name:
-          - apache2
-    # changer les droits
-    - name: change folder rights
-      file:
-        path: /var/www/html
-        mode: '0755'
-        state: directory
-    #module pour copier un fichier
-    - name: copy file
-      copy:
-        src: html/
-        dest: /var/www/html/
-    # module pour activer un service
-    - name: start apache2 service
-      service:
-        name: apache2
-        state: started
-        enabled: yes
-    
-    
+     - name: Install docker.
+    package:
+      name: docker-ce
+      state: present
+  - name: Start docker service
+    service:
+      name: docker
+      state: started
+  - name: Create a redis container
+    docker_container:
+      name: data1
+      image: centos
+      state: started
+      recreate: yes
+      exposed_ports:
+        - 8080
