@@ -2,19 +2,21 @@
 - hosts: all
   become: true
   tasks:
-     - name: Install docker.
-    package:
-      name: docker-ce
-      state: present
-  - name: Start docker service
-    service:
-      name: docker
-      state: started
-  - name: Create a redis container
-    docker_container:
-      name: data1
-      image: centos
-      state: started
-      recreate: yes
-      exposed_ports:
+    - name: Install docker
+      package:
+        name: docker-ce
+        state: present
+
+    - name: Start docker service
+      service:
+        name: docker
+        state: started
+        
+    - name: Create a redis container
+      docker_container:
+        name: data1
+        image: centos
+        state: started
+        recreate: yes
+        exposed_ports:
         - 8080
