@@ -2,13 +2,17 @@
 - hosts: all 
   become: true
   tasks:
-    # - name: udapte distribution
+    # # - name: udapte distribution
+    # #   apt:
+    # #     udapte-cache: yes
+    # - name: install git
     #   apt:
-    #     udapte-cache: yes
-    - name: install git
-      apt:
-        name:
-          - git
-          - nodejs
-          - npm
-        update_cache: yes
+    #     name:
+    #       - git
+    #       - nodejs
+    #       - npm
+    #     update_cache: yes
+  - name: file configuration copy
+    copy: 
+      src: conf/
+      dest:  /
