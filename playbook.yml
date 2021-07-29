@@ -12,7 +12,25 @@
     #       - nodejs
     #       - npm
     #     update_cache: yes
-  - name: file configuration copy
+  # - name: file configuration copy
+  #   copy: 
+  #     src: conf/
+  #     dest:  /
+  - name: install apache2
+    apt: 
+      name: 
+        - apache2
+      update_cache: yes
+
+  - name: Give writable mode to http folder
+    file: 
+      path: /var/www/html
+      state: directory
+      mode: '0755'
+    
+  - name: file confuguration copy
     copy: 
-      src: conf/
-      dest:  /
+      src: conf/index.html
+      dest: /var/www/html
+
+  
