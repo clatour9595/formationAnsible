@@ -1,44 +1,55 @@
 ---
-- hosts: all
-  become: true
+- hosts: all 
+  become: true 
   tasks:
-    - name: Installation des packages de base pour docker
-      apt:
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gnupg
-          - lsb-release
-        update_cache: yes
+  - name: Update the apt package index
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
 
-    # Ajouter la clé gpg pour la sécurité des échanges avec le serveur des packages docker
-    - name: ajout de la cle gpg
-      apt_key:
-        url: https://download.docker.com/linux/debian/gpg
-        state: present
+  - name: Install packages for apt add repository over HTTPS
+    become: yes
+    apt:
+      name: "{{ packagesdep }}"
+      force_apt_get: yes
+      state: latest
+      update_cache: yes
+    vars:
+      packagesdep:
+      - git
+      - apt-transport-https
+      - ca-certificates
+      - wget
+      - software-properties-common
+      - gnupg2
+      - curl
 
-    # ajouter le repos pour chercher les packages de docker
-    - name: Ajout de l'adresse du repos pour les packages docker de debian
-      apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
-        state: present
+  - name: Add Apt signing key from official docker repo
+    apt_key:
+      url: https://download.docker.com/linux/debian/gpg
+      state: present
+  - name: add docker official repository for Debian Stretch
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+      state: present
+  - name: Index new repo into the cache
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
 
-    # installation des composants docker
-    - name: install docker components
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        update_cache: yes
-
-    # démarrage du service
-    - name: start docker service
-      service:
-        name: docker start
-        state: started
-        enabled: yes
-ed
-        enabled: yes
-
+  - name: actually install docker
+    apt:
+      name: "docker-ce"
+      state: latest
+  
+  - name: Run and enable docker
+    service:
+     name: docker
+     state: started
+     enabled: true
