@@ -11,12 +11,29 @@
       service:
         name: docker
         state: started
-        
-    - name: Create a redis container
-      docker_container:
-        name: data1
-        image: centos
-        state: started
-        recreate: yes
-        exposed_ports:
-        - 8080
+
+    - name: copy code source
+      copy:
+          src: tp/
+          dest: /
+
+    - name: load container from dockerfile
+      docker_image:
+        name: node
+        load_path: /tp/result/Dockerfile
+        state: present
+        source: load
+    
+    - name: load container from dockerfile
+      docker_image:
+        name: node
+        load_path: /tp/vote/Dockerfile
+        state: present
+        source: load
+
+    - name: load container from dockerfile
+      docker_image:
+        name: node
+        load_path: /tp/worker/Dockerfile
+        state: present
+        source: load
