@@ -25,7 +25,7 @@
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
-    when: ansible_facts['os_family'] == 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
     # ajouter le repos pour chercher les packages de docker
 - name: Ajout de l'adresse du repos pour les packages docker de debian
