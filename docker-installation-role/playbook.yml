@@ -3,5 +3,5 @@
   become: true
   vars_files: vars_file.yml
   roles:
-   - docker-role
+   - docker-roles
 
